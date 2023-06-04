@@ -1,16 +1,11 @@
 import "./Fetch.css";
 import React, { useState } from "react";
 
-function Fetch() {
+function Fetch({ onFetch }) {
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-  };
-
-  const handleFetchClick = () => {
-    // Perform subscription logic here
-    console.log(`Fetching interests for email: ${email}`);
   };
 
   return (
@@ -21,7 +16,13 @@ function Fetch() {
         value={email}
         onChange={handleEmailChange}
       />
-      <button onClick={handleFetchClick}>Fetch My Interests</button>
+      <button
+        onClick={() => {
+          onFetch(email);
+        }}
+      >
+        Fetch My Interests
+      </button>
     </div>
   );
 }
