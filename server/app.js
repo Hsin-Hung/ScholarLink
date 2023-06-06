@@ -3,7 +3,6 @@ const db = require("./db.js");
 const {
   getSubInterests,
   createSub,
-  updateSub,
   deleteSub,
 } = require("./controllers/subController");
 const app = express();
@@ -18,6 +17,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/subscribe", createSub);
+
+app.post("/unsubscribe", deleteSub);
 
 app.post("/fetch", getSubInterests);
 
