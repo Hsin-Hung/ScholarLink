@@ -1,8 +1,8 @@
 const subService = require("./services/subService");
 
 exports.process = async (email) => {
-  const recommendations = ["abc.com", "123.com"];
+  const res = await subService.getInterests(email);
   await new Promise((res) => setTimeout(res, 10000));
-  await subService.updateRecommendations(email, recommendations);
+  await subService.updateRecommendations(email, res.interests);
   console.log("Recommend Done");
 };

@@ -1,0 +1,13 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: 'rabbitmq'
+    ports:
+        - 5673:5672
+        - 15673:15672
+  web:
+    build: ./server
+    ports:
+      - 8080:8080
+  ml:
+    build: ./ml 

@@ -18,7 +18,7 @@ exports.deleteSub = async (email) => {
 };
 
 exports.notifyRecSub = (email) => {
-  amqp.connect("amqp://localhost", function (error0, connection) {
+  amqp.connect("amqp://rabbitmq", function (error0, connection) {
     if (error0) {
       throw error0;
     }
