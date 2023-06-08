@@ -13,7 +13,7 @@ db.connect().catch((err) => console.log(err));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Display Web");
+  res.send("Display Website");
 });
 
 app.post("/subscribe", createSub);

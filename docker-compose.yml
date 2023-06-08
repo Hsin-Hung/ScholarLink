@@ -1,13 +1,33 @@
 services:
   rabbitmq:
     image: rabbitmq:3.12-management
-    container_name: 'rabbitmq'
     ports:
-        - 5673:5672
-        - 15673:15672
+      - 5673:5672
+      - 15673:15672
   web:
     build: ./server
+    environment:
+      WAIT_HOSTS: mongodb:27017, rabbitmq:5672
+      CONN_STR: mongodb://admin:admin@mongodb
+    volumes:
+      - ./server:/app
     ports:
       - 8080:8080
   ml:
     build: ./ml 
+    environment:
+      WAIT_HOSTS: mongodb:27017, rabbitmq:5672 
+      CONN_STR: mongodb://admin:admin@mongodb
+    volumes:
+      - ./ml:/app
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - data:/data/db
+volumes:
+  data:

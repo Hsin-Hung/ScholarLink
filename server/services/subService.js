@@ -14,7 +14,7 @@ exports.createSub = async (email, interests) => {
 };
 
 exports.deleteSub = async (email) => {
-  return await BlogModel.deleteOne({ email: email });
+  return await SubModel.deleteOne({ email: email });
 };
 
 exports.notifyRecSub = (email) => {
