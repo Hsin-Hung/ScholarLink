@@ -14,12 +14,19 @@ services:
     ports:
       - 8080:8080
   ml:
-    build: ./ml 
+    build: ./ml
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672 
       CONN_STR: mongodb://admin:admin@mongodb
     volumes:
       - ./ml:/app
+  mail:
+    build: ./mail 
+    environment:
+      WAIT_HOSTS: mongodb:27017
+      CONN_STR: mongodb://admin:admin@mongodb
+    volumes:
+      - ./mail:/app
   mongodb:
     image: mongodb/mongodb-community-server:6.0-ubi8
     ports:

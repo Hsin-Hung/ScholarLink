@@ -8,7 +8,7 @@ exports.getSubInterests = async (email) => {
 exports.createSub = async (email, interests) => {
   return await SubModel.findOneAndUpdate(
     { email: email },
-    { interests: interests, recommendations: [] },
+    { interests: interests, recommendations: [], hasRecommended: true },
     { upsert: true, new: true }
   );
 };
