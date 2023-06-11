@@ -2,7 +2,6 @@ import pika, sys, os
 from recommender import process
 
 def main():
-   
    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
    channel = connection.channel()
 

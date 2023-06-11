@@ -1,6 +1,5 @@
 // Import the mongoose module
 const mongoose = require("mongoose");
-const Sub = require("./models/sub");
 
 require("dotenv").config();
 

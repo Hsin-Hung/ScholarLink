@@ -1,5 +1,5 @@
 const SubModel = require("../models/sub");
-const amqp = require("amqplib/callback_api");
+const amqp = require("amqplib");
 
 exports.getSubInterests = async (email) => {
   return await SubModel.find({ email: email }, "interests");
@@ -8,7 +8,7 @@ exports.getSubInterests = async (email) => {
 exports.createSub = async (email, interests) => {
   return await SubModel.findOneAndUpdate(
     { email: email },
-    { interests: interests, recommendations: [], hasRecommended: true },
+    { interests: interests, recommendation: "", hasRecommended: true },
     { upsert: true, new: true }
   );
 };
@@ -17,27 +17,23 @@ exports.deleteSub = async (email) => {
   return await SubModel.deleteOne({ email: email });
 };
 
-exports.notifyRecSub = (email) => {
-  amqp.connect("amqp://rabbitmq", function (error0, connection) {
-    if (error0) {
-      throw error0;
-    }
-    connection.createChannel(function (error1, channel) {
-      if (error1) {
-        throw error1;
-      }
+let channel, connection;
 
-      var queue = "task_queue";
-      var msg = email;
-
-      channel.assertQueue(queue, {
-        durable: true,
-      });
-      channel.sendToQueue(queue, Buffer.from(msg), {
-        persistent: true,
-      });
-
-      console.log(" [x] Sent %s", msg);
+exports.connectQueue = async () => {
+  try {
+    connection = await amqp.connect("amqp://rabbitmq");
+    channel = await connection.createChannel();
+    var queue = "task_queue";
+    await channel.assertQueue(queue, {
+      durable: true,
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.sendData = async (email) => {
+  await channel.sendToQueue("task_queue", Buffer.from(email), {
+    persistent: true,
   });
 };

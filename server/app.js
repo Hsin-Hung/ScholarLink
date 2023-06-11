@@ -4,11 +4,13 @@ const {
   getSubInterests,
   createSub,
   deleteSub,
+  initConnection,
 } = require("./controllers/subController");
 const app = express();
 const port = 8080;
 
 db.connect().catch((err) => console.log(err));
+initConnection();
 
 app.use(express.json());
 
@@ -25,8 +27,8 @@ app.post("/fetch", getSubInterests);
 app.get("/options", (req, res) => {
   res.json({
     options: [
-      { value: "chocolate", label: "Chocolate" },
-      { value: "strawberry", label: "Strawberry" },
+      { value: "Astronomy", label: "Astronomy" },
+      { value: "BehavioralSciences", label: "Behavioral Sciences" },
       { value: "vanilla", label: "Vanilla" },
     ],
   });

@@ -1,40 +1,50 @@
 const db = require("./db.js");
+const nodemailer = require("nodemailer");
 const subService = require("./services/subService");
-const https = require("https");
+var cron = require("node-cron");
 
 db.connect().catch((err) => console.log(err));
+subService.connectQueue();
 
-const getArticles = async () => {
-  res = await subService.getAllRecommendations();
-  recommendations = res[0].recommendations;
-  console.log(recommendations);
-  const doi = recommendations[0];
-  const api_key = process.env.API_KEY;
-  const url =
-    "https://api.springernature.com/openaccess/json?q=" +
-    doi +
-    "&api_key=" +
-    api_key;
+const sendEmail = async (email, recommendation) => {
+  // create reusable transporter object using the default SMTP transport
+  const transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    auth: {
+      user: "sallie.schmidt@ethereal.email",
+      pass: "cd1xG9D3yMt7BaeqZ1",
+    },
+  });
 
-  https
-    .get(url, (res) => {
-      let data = [];
-      console.log("statusCode:", res.statusCode);
-      console.log("headers:", res.headers);
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"Fred Foo 👻" <foo@example.com>', // sender address
+    to: email, // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: recommendation, // plain text body
+    html: "<a href=" + recommendation + ">Your weekly research paper</a>", // html body
+  });
 
-      res.on("data", (chunk) => {
-        data.push(chunk);
-      });
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-      res.on("end", () => {
-        console.log("Response ended: ");
-        const users = JSON.parse(Buffer.concat(data).toString());
-        console.log(users);
-      });
-    })
-    .on("error", (err) => {
-      console.log("Error: ", err.message);
-    });
+  // Preview only available when sending through an Ethereal account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 };
 
-getArticles();
+const sendEmails = async () => {
+  console.log("Start sending emails ...");
+  res = await subService.getAllRecommendations();
+  for (let i = 0; i < res.length; i++) {
+    email = res[i].email;
+    recommendation = res[i].recommendation;
+    sendEmail(email, recommendation);
+  }
+  subService.resetRecommendations();
+};
+
+let task = cron.schedule("*/30 * * * * *", sendEmails);
+
+task.start();

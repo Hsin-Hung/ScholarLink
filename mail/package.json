@@ -13,6 +13,8 @@
     "amqplib": "^0.10.3",
     "dotenv": "^16.1.4",
     "https": "^1.0.0",
-    "mongoose": "^7.2.2"
+    "mongoose": "^7.2.2",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.3"
   }
 }

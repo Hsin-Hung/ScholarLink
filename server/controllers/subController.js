@@ -12,9 +12,7 @@ exports.getSubInterests = async (req, res) => {
 exports.createSub = async (req, res) => {
   try {
     const sub = await subService.createSub(req.body.email, req.body.interests);
-
-    subService.notifyRecSub(req.body.email);
-
+    subService.sendData(req.body.email);
     res.json({ data: sub, status: "success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -28,4 +26,8 @@ exports.deleteSub = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+exports.initConnection = async () => {
+  await subService.connectQueue();
 };
