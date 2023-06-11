@@ -18,13 +18,17 @@ services:
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672 
       CONN_STR: mongodb://admin:admin@mongodb
+    env_file:
+      - ./ml/.env
     volumes:
       - ./ml:/app
   mail:
-    build: ./mail 
+    build: ./mail
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
       CONN_STR: mongodb://admin:admin@mongodb
+    env_file:
+      - ./mail/.env
     volumes:
       - ./mail:/app
   mongodb:
