@@ -10,13 +10,18 @@ def main():
 
    def callback(ch, method, properties, body):
       print(" [x] Received %r" % body.decode())
-      process(body.decode())
+      print(" [x] Received properties %r" % properties.message_id)
+      process(body.decode(), properties.message_id)
       ch.basic_ack(delivery_tag = method.delivery_tag)
 
    channel.basic_qos(prefetch_count=1)
    channel.basic_consume(queue='task_queue', on_message_callback=callback)
     
-   channel.start_consuming()
+   try:
+      channel.start_consuming()
+   except KeyboardInterrupt:
+      channel.stop_consuming()
+   connection.close()
 
 if __name__ == '__main__':
    try:

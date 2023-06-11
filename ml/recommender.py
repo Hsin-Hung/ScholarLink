@@ -9,21 +9,25 @@ def updateUser(user):
     updateRecommendation(email, recommendation)
 
 def update():
+    print("Resetting recommendations")
     users = getAllRecommendations()
     for user in users:
         updateUser(user)
+    print("Done Resetting recommendations")
 
-def process(task):
+def process(task, message_id):
 
-    if task == "":
+    if message_id == "resetRecommendations":
         thread1 = threading.Thread(target=update)
         thread1.start()
-    else:
+    elif message_id == "newSubscriber":
         email = task
         res = getInterests(email)
         recommendation = recommend(res["interests"])
         updateRecommendation(email, recommendation)
         print("DONE UPDATE RECOMMENDATION")
+    else:
+        print("ERROR: message ID doesn't exist")
 
 def recommend(interests):
     api_key = os.environ['API_KEY']

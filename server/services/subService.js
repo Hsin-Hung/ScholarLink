@@ -35,5 +35,6 @@ exports.connectQueue = async () => {
 exports.sendData = async (email) => {
   await channel.sendToQueue("task_queue", Buffer.from(email), {
     persistent: true,
+    messageId: "newSubscriber",
   });
 };

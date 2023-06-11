@@ -32,5 +32,6 @@ exports.resetRecommendations = async () => {
   const content = "";
   await channel.sendToQueue("task_queue", Buffer.from(content), {
     persistent: true,
+    messageId: "resetRecommendations",
   });
 };

@@ -40,7 +40,7 @@ const sendEmails = async () => {
   for (let i = 0; i < res.length; i++) {
     email = res[i].email;
     recommendation = res[i].recommendation;
-    sendEmail(email, recommendation);
+    await sendEmail(email, recommendation);
   }
   subService.resetRecommendations();
 };
