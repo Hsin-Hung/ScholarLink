@@ -1,7 +1,8 @@
 import pika, sys, os
-from recommender import process
+from recommender import Recommender
 
 def main():
+   recommender = Recommender()
    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
    channel = connection.channel()
 
@@ -11,8 +12,10 @@ def main():
    def callback(ch, method, properties, body):
       print(" [x] Received %r" % body.decode())
       print(" [x] Received properties %r" % properties.message_id)
-      process(body.decode(), properties.message_id)
-      ch.basic_ack(delivery_tag = method.delivery_tag)
+      if recommender.process(body.decode(), properties.message_id):
+         ch.basic_ack(delivery_tag = method.delivery_tag)
+      else:
+         ch.basic_nack(delivery_tag = method.delivery_tag)
 
    channel.basic_qos(prefetch_count=1)
    channel.basic_consume(queue='task_queue', on_message_callback=callback)
