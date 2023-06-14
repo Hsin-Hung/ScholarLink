@@ -28,6 +28,6 @@ exports.deleteSub = async (req, res) => {
   }
 };
 
-exports.initConnection = async () => {
-  await subService.connectQueue();
+exports.connectRMQ = async () => {
+  return subService.connectQueue();
 };

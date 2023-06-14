@@ -8,30 +8,40 @@ exports.getAllRecommendations = async () => {
     return res;
   } catch (err) {
     console.log(`Fail to get all recommendations ` + err);
-    return null;
+    return false;
   }
 };
 
 let channel, connection;
 
-exports.connectQueue = async () => {
+exports.connectRMQ = async () => {
   try {
     connection = await amqp.connect("amqp://rabbitmq");
     channel = await connection.createChannel();
-
     var queue = "task_queue";
     await channel.assertQueue(queue, {
       durable: true,
     });
+    return Promise.resolve();
   } catch (error) {
     console.log(error);
+    if (channel) {
+      await channel.close();
+    }
+    if (connection) {
+      await connection.close();
+    }
+    return Promise.reject(error);
   }
 };
 
 exports.resetRecommendations = async () => {
-  const content = "";
-  await channel.sendToQueue("task_queue", Buffer.from(content), {
-    persistent: true,
-    messageId: "resetRecommendations",
-  });
+  try {
+    await channel.sendToQueue("task_queue", Buffer.from(""), {
+      persistent: true,
+      messageId: "resetRecommendations",
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -21,6 +21,7 @@ class Recommender:
         self.interestToTotal = {}
         for interest in allInterests:
             self.interestToTotal[interest] = 1
+        self.updateInterestsTotal()
 
     def updateUser(self, user):
         email, interests = user["email"], user["interests"]

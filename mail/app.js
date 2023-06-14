@@ -3,8 +3,8 @@ const nodemailer = require("nodemailer");
 const subService = require("./services/subService");
 var cron = require("node-cron");
 
-db.connect().catch((err) => console.log(err));
-subService.connectQueue();
+const dbConnectPromise = db.connect();
+const rmqConnectPromise = subService.connectRMQ();
 
 const sendEmail = async (email, recommendation) => {
   // create reusable transporter object using the default SMTP transport
@@ -35,14 +35,21 @@ const sendEmail = async (email, recommendation) => {
 const sendEmails = async () => {
   console.log("Start sending emails ...");
   res = await subService.getAllRecommendations();
-  for (let i = 0; i < res.length; i++) {
-    email = res[i].email;
-    recommendation = res[i].recommendation;
-    await sendEmail(email, recommendation);
+  if (res) {
+    for (let i = 0; i < res.length; i++) {
+      email = res[i].email;
+      recommendation = res[i].recommendation;
+      await sendEmail(email, recommendation);
+    }
+    subService.resetRecommendations();
   }
-  subService.resetRecommendations();
 };
 
-let task = cron.schedule("*/30 * * * * *", sendEmails);
-
-task.start();
+Promise.all([dbConnectPromise, rmqConnectPromise])
+  .then(() => {
+    let task = cron.schedule("*/30 * * * * *", sendEmails);
+    task.start();
+  })
+  .catch((err) => {
+    console.log("Error connecting to db or rmq");
+  });

@@ -27,8 +27,16 @@ exports.connectQueue = async () => {
     await channel.assertQueue(queue, {
       durable: true,
     });
+    return Promise.resolve();
   } catch (error) {
     console.log(error);
+    if (channel) {
+      await channel.close();
+    }
+    if (connection) {
+      await connection.close();
+    }
+    return Promise.reject(error);
   }
 };
 

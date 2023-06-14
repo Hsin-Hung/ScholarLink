@@ -4,10 +4,7 @@ const Sub = require("./models/sub");
 
 require("dotenv").config();
 
-const uri = process.env.CONN_STR;
-
-async function connect() {
-  await mongoose.connect(uri);
-}
-
-module.exports = { connect };
+exports.connect = async () => {
+  const uri = process.env.CONN_STR;
+  return mongoose.connect(uri);
+};

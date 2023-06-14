@@ -4,13 +4,13 @@ const {
   getSubInterests,
   createSub,
   deleteSub,
-  initConnection,
+  connectRMQ,
 } = require("./controllers/subController");
 const app = express();
 const port = 8080;
 
-db.connect().catch((err) => console.log(err));
-initConnection();
+const dbConnectPromise = db.connect();
+const rmqConnectPromise = connectRMQ();
 
 app.use(express.json());
 
@@ -34,6 +34,12 @@ app.get("/options", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+Promise.all([dbConnectPromise, rmqConnectPromise])
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Error connecting to db or rmq");
+  });
