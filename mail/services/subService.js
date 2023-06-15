@@ -12,6 +12,17 @@ exports.getAllRecommendations = async () => {
   }
 };
 
+exports.resetRecommendations = async () => {
+  try {
+    await channel.sendToQueue("task_queue", Buffer.from(""), {
+      persistent: true,
+      messageId: "resetRecommendations",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 let channel, connection;
 
 exports.connectRMQ = async () => {
@@ -35,13 +46,12 @@ exports.connectRMQ = async () => {
   }
 };
 
-exports.resetRecommendations = async () => {
-  try {
-    await channel.sendToQueue("task_queue", Buffer.from(""), {
-      persistent: true,
-      messageId: "resetRecommendations",
-    });
-  } catch (error) {
-    console.log(error);
+exports.closeRMQ = async () => {
+  if (channel) {
+    await channel.close();
   }
+  if (connection) {
+    await connection.close();
+  }
+  console.log("RabbitMQ disconnected through app termination");
 };

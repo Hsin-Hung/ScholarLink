@@ -8,7 +8,7 @@ exports.getSubInterests = async (email) => {
 exports.createSub = async (email, interests) => {
   return await SubModel.findOneAndUpdate(
     { email: email },
-    { interests: interests, recommendation: "", hasRecommended: true },
+    { interests: interests, recommendation: "" },
     { upsert: true, new: true }
   );
 };
@@ -38,6 +38,16 @@ exports.connectQueue = async () => {
     }
     return Promise.reject(error);
   }
+};
+
+exports.closeQueue = async () => {
+  if (channel) {
+    await channel.close();
+  }
+  if (connection) {
+    await connection.close();
+  }
+  console.log("RabbitMQ disconnected through app termination");
 };
 
 exports.sendData = async (email) => {
