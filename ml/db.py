@@ -1,9 +1,18 @@
 import os
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+
 
 class DB:
-    def __init__(self):
-        self.client = MongoClient(os.environ['CONN_STR'])
+    def __init__(self, uri):
+        self.uri = uri
+        
+    def __enter__(self):
+        self.client = MongoClient(self.uri)
+        return self
+            
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.client.close()
 
     def getInterests(self, email):
         try:

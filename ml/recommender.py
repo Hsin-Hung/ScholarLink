@@ -3,7 +3,7 @@ import datetime
 import random
 import requests
 import threading
-from db import DB
+from concurrent.futures import ThreadPoolExecutor
 
 allInterests = ["Behavioral Sciences", "Biomedicine", "Business and Management", "Chemistry", 
                 "Climate", "Computer Science", "Earth Sciences", "Economics", "Education", "Energy",
@@ -12,10 +12,10 @@ allInterests = ["Behavioral Sciences", "Biomedicine", "Business and Management",
                 "Social Sciences", "Statistics", "Literature"]
 
 class Recommender:
-    def __init__(self):
+    def __init__(self, database):
         self.endpoint = "https://api.springernature.com/meta/v2/json?"
         self.api_key = os.environ['API_KEY']
-        self.db = DB()
+        self.db = database
         self.fromYear = datetime.date.today().year - 6 # only recommend research paper that is recent 6 years
         self.lastUpdateTotal = datetime.datetime.min
         self.interestToTotal = {}
@@ -36,21 +36,26 @@ class Recommender:
             self.updateUser(user)
         print("Done updating recommendations")
 
+    def updateInterest(self, interest):
+        url = self.endpoint + "q=subject:%22" + interest +"%22 onlinedatefrom:" + str(self.fromYear) + "-01-01&p=0&api_key=" + self.api_key
+        print("update interest url: " + url)
+        try:
+            response = requests.get(url)
+            res = response.json()
+            total = int(res["result"][0]["total"])
+            print("interest " + interest + " has total: " + str(total))
+            self.interestToTotal[interest] = total
+        except:
+            print("Error occurred")
+
     def updateInterestsTotal(self):
         print("Updating interests total ...")
         self.fromYear = datetime.date.today().year - 6
-        for interest in self.interestToTotal.keys():
-            url = self.endpoint + "q=subject:%22" + interest +"%22 onlinedatefrom:" + str(self.fromYear) + "-01-01&p=0&api_key=" + self.api_key
-            print("update interest url: " + url)
-            try:
-                response = requests.get(url)
-                res = response.json()
-                total = int(res["result"][0]["total"])
-                print("interest " + interest + " has total: " + str(total))
-                self.interestToTotal[interest] = total
-            except:
-                print("Error occurred")
-
+        with ThreadPoolExecutor(max_workers=len(allInterests)) as pool:
+            pool.map(self.updateInterest,self.interestToTotal.keys())
+            print("fetching and updating each interest total ...")
+        
+        print("DONE: fetching and updating each interest total")
         self.lastUpdateTotal = datetime.datetime.today()
     
     def getRandomInterest(self, interests):
