@@ -1,4 +1,5 @@
 const db = require("./db.js");
+const { getEmailTemplate } = require("./models/email.js");
 const nodemailer = require("nodemailer");
 const {
   getAllRecommendations,
@@ -27,11 +28,10 @@ const sendEmail = async (email, recommendation) => {
   try {
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: "scholarlinkmail@gmail.com", // sender address
+      from: "Scholar Link <scholarlinkmail@gmail.com>", // sender address
       to: email, // receiver
       subject: "Your Weekly Research Paper", // Subject line
-      text: recommendation, // plain text body
-      html: "<a href=" + recommendation + ">Your weekly research paper</a>", // html body
+      html: getEmailTemplate(recommendation), // html body
     });
 
     console.log("Message sent: %s", info.messageId);
@@ -53,6 +53,7 @@ const sendEmails = async () => {
         console.log(email + " has no recommendation to send");
       }
     }
+    // reset the recommendations for all subscribers for next send
     resetRecommendations();
   }
 };
@@ -65,7 +66,7 @@ Promise.all([dbConnectPromise, rmqConnectPromise])
     task.start();
   })
   .catch((err) => {
-    console.log("Error connecting to db or rmq");
+    console.log(err);
   });
 
 process.on("SIGTERM", async () => {

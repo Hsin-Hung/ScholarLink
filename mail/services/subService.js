@@ -29,7 +29,7 @@ exports.connectRMQ = async () => {
   try {
     connection = await amqp.connect("amqp://rabbitmq");
     channel = await connection.createChannel();
-    var queue = "task_queue";
+    const queue = "task_queue";
     await channel.assertQueue(queue, {
       durable: true,
     });
