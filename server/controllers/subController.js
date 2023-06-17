@@ -1,5 +1,5 @@
 const subService = require("../services/subService");
-const allInterests = require("../constants/interests.js");
+const { validate } = require("deep-email-validator");
 
 exports.getOptions = async (req, res) => {
   try {
@@ -22,13 +22,21 @@ exports.getSubInterests = async (req, res) => {
 };
 
 exports.createSub = async (req, res) => {
-  try {
-    const sub = await subService.createSub(req.body.email, req.body.interests);
-    subService.sendData(req.body.email);
-    res.json({ data: sub, status: "success" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
+  const val = await validate(req.body.email);
+  if (val["valid"]) {
+    try {
+      const sub = await subService.createSub(
+        req.body.email,
+        req.body.interests
+      );
+      subService.sendData(req.body.email);
+      res.json({ data: sub, status: "success" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    res.status(400).json({ error: val });
   }
 };
 
