@@ -1,9 +1,19 @@
 const SubModel = require("../models/sub");
 const OptionsModel = require("../models/options");
+const NodeCache = require("node-cache");
 const amqp = require("amqplib");
 
+const myCache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
+
 exports.getSubInterests = async (email) => {
-  return await SubModel.find({ email: email }, "interests");
+  if (myCache.has(email)) {
+    console.log(`cached interests for ${email}`);
+    return myCache.get(email);
+  } else {
+    const res = await SubModel.find({ email: email }, "interests");
+    myCache.set(email, res);
+    return res;
+  }
 };
 
 exports.createSub = async (email, interests) => {
@@ -19,7 +29,14 @@ exports.deleteSub = async (email) => {
 };
 
 exports.getOptions = async () => {
-  return await OptionsModel.findOne({}, "values");
+  if (myCache.has("options")) {
+    console.log("cached options");
+    return myCache.get("options");
+  } else {
+    const res = await OptionsModel.findOne({}, "values");
+    myCache.set("options", res, 0);
+    return res;
+  }
 };
 
 let channel, connection;
