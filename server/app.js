@@ -37,7 +37,7 @@ Promise.all([dbConnectPromise, rmqConnectPromise])
     });
   })
   .catch((err) => {
-    console.log("Error connecting to db or rmq");
+    console.log(err);
   });
 
 process.on("SIGTERM", async () => {

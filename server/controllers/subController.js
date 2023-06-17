@@ -2,11 +2,13 @@ const subService = require("../services/subService");
 const allInterests = require("../constants/interests.js");
 
 exports.getOptions = async (req, res) => {
-  let content = [];
-  for (let i = 0; i < allInterests.length; i++) {
-    content.push({ value: allInterests[i], label: allInterests[i] });
+  try {
+    const content = await subService.getOptions();
+    res.json({ options: content, status: "success" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
   }
-  res.json({ options: content, status: "success" });
 };
 
 exports.getSubInterests = async (req, res) => {

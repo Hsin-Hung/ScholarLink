@@ -1,4 +1,5 @@
 const SubModel = require("../models/sub");
+const OptionsModel = require("../models/options");
 const amqp = require("amqplib");
 
 exports.getSubInterests = async (email) => {
@@ -8,7 +9,7 @@ exports.getSubInterests = async (email) => {
 exports.createSub = async (email, interests) => {
   return await SubModel.findOneAndUpdate(
     { email: email },
-    { interests: interests, recommendation: "" },
+    { interests: interests, recommendation: "https://www.springer.com/us" },
     { upsert: true, new: true }
   );
 };
@@ -17,19 +18,22 @@ exports.deleteSub = async (email) => {
   return await SubModel.deleteOne({ email: email });
 };
 
+exports.getOptions = async () => {
+  return await OptionsModel.findOne({}, "values");
+};
+
 let channel, connection;
 
 exports.connectQueue = async () => {
   try {
     connection = await amqp.connect("amqp://rabbitmq");
     channel = await connection.createChannel();
-    var queue = "task_queue";
+    const queue = "task_queue";
     await channel.assertQueue(queue, {
       durable: true,
     });
     return Promise.resolve();
   } catch (error) {
-    console.log(error);
     if (channel) {
       await channel.close();
     }

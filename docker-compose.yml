@@ -8,7 +8,7 @@ services:
     build: ./server
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
-      CONN_STR: mongodb://admin:admin@mongodb
+      CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
     volumes:
       - ./server:/app
     ports:
@@ -16,8 +16,8 @@ services:
   ml:
     build: ./ml
     environment:
-      WAIT_HOSTS: mongodb:27017, rabbitmq:5672 
-      CONN_STR: mongodb://admin:admin@mongodb
+      WAIT_HOSTS: mongodb:27017, rabbitmq:5672
+      CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
     env_file:
       - ./ml/.env
     volumes:
@@ -26,19 +26,21 @@ services:
     build: ./mail
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
-      CONN_STR: mongodb://admin:admin@mongodb
+      CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
     env_file:
       - ./mail/.env
     volumes:
       - ./mail:/app
   mongodb:
-    image: mongodb/mongodb-community-server:6.0-ubi8
+    image: mongo
     ports:
       - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: mydb
     volumes:
       - data:/data/db
+      - ./scripts:/docker-entrypoint-initdb.d
 volumes:
   data:
