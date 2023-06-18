@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const db = require("./db.js");
 const {
@@ -23,6 +24,7 @@ const port = 8080;
 const dbConnectPromise = db.connect();
 const rmqConnectPromise = connectRMQ();
 
+app.use(cors());
 app.use(limiter);
 app.use(express.json());
 

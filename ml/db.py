@@ -16,7 +16,7 @@ class DB:
 
     def getOptions(self):
         try:
-            res = self.client.mydb.options.find_one({}, {"values":1})
+            res = self.client.mydb.options.find_one({}, {"values":1, "_id": 0})
             return res
         except Exception as e:
             print("An exception occurred ::", e)
@@ -24,7 +24,7 @@ class DB:
 
     def getInterests(self, email):
         try:
-            res = self.client.mydb.subs.find_one({"email" : email}, {"interests":1})
+            res = self.client.mydb.subs.find_one({"email" : email}, {"interests":1, "_id": 0})
             return res
         except Exception as e:
             print("An exception occurred ::", e)
@@ -40,7 +40,7 @@ class DB:
     
     def getAllRecommendations(self):
         try:
-            res = self.client.mydb.subs.find({}, {"email":1, "interests":1})
+            res = self.client.mydb.subs.find({}, {"email":1, "interests":1, "_id": 0})
             return res
         except Exception as e:
             print("An exception occurred ::", e)

@@ -3,7 +3,10 @@ const amqp = require("amqplib");
 
 exports.getAllRecommendations = async () => {
   try {
-    const res = await SubModel.find({}, "email recommendation");
+    const res = await SubModel.find(
+      {},
+      { email: 1, recommendation: 1, _id: 0 }
+    );
     console.log(res);
     return res;
   } catch (err) {

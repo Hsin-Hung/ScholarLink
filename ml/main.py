@@ -56,4 +56,4 @@ if __name__ == '__main__':
          os._exit(0)
    except Exception as e:
       # Handle all other exceptions here
-      print('An error occurred:', str(e))
+      print('An main error occurred:', str(e))

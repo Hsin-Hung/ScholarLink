@@ -41,16 +41,18 @@ class Recommender:
             print("Done updating recommendations")
 
     def updateInterestTotal(self, interest):
-        url = self.endpoint + "q=subject:%22" + interest + "%22 onlinedatefrom:" + str(self.fromYear) + "-01-01&p=0&api_key=" + self.api_key
-        print("update interest url: %r " % url)
-        try:
-            response = requests.get(url)
-            res = response.json()
-            total = int(res["result"][0]["total"])
-            print("interest " + interest + " has total: " + str(total))
-            self.interestToTotal[interest] = total
-        except Exception as e:
-            print('An error occurred: %r' % str(e))
+
+        self.interestToTotal[interest] = 100
+        # url = self.endpoint + "q=subject:%22" + interest + "%22 onlinedatefrom:" + str(self.fromYear) + "-01-01&p=0&api_key=" + self.api_key
+        # print("update interest url: %r " % url)
+        # try:
+        #     response = requests.get(url)
+        #     res = response.json()
+        #     total = int(res["result"][0]["total"])
+        #     print("interest " + interest + " has total: " + str(total))
+        #     self.interestToTotal[interest] = total
+        # except Exception as e:
+        #     print('An error occurred: %r' % str(e))
 
     def updateInterestsTotal(self):
         print("updating interests total ...")
