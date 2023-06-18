@@ -4,7 +4,7 @@ import React from 'react';
 function Header() {
   return (
     <header className="Header">
-      <p>ScholarLink</p>
+      <p>Scholar Link</p>
     </header>
   );
 }

@@ -17,15 +17,19 @@ exports.getOptions = async (req, res) => {
 exports.getSubInterests = async (req, res) => {
   try {
     const email = req.body.email;
+    console.log(email);
     let interests;
     if (myCache.has(email)) {
       console.log(`cached interests for ${email}`);
       interests = myCache.get(email);
     } else {
-      interests = await subService.getSubInterests(email);
+      const interests = (await subService.getSubInterests(email)).interests;
+      if (!interests) {
+        return res.status(400).json({ error: "No interests to fetch" });
+      }
       myCache.set(email, interests);
     }
-    res.json({ data: interests, status: "success" });
+    res.json({ interests: interests, status: "success" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });
@@ -65,13 +69,15 @@ exports.createSub = async (req, res) => {
   try {
     const email = req.body.email;
     const interests = req.body.interests;
+    console.log(email);
+    console.log(interests);
     if (await validateSubData(email, interests)) {
       const sub = await subService.createSub(email, interests);
       myCache.set(email, interests);
       subService.sendData(email);
-      res.json({ data: sub, status: "success" });
+      res.json({ status: "success" });
     } else {
-      res.status(400).json({ error: "Invalid Email or Interests" });
+      res.status(400).json({ error: "Invalid email or interests" });
     }
   } catch (err) {
     console.log(err);
@@ -82,9 +88,13 @@ exports.createSub = async (req, res) => {
 exports.deleteSub = async (req, res) => {
   try {
     const email = req.body.email;
-    const sub = await subService.deleteSub(req.body.email);
+    console.log(email);
+    const query = await subService.deleteSub(req.body.email);
+    if (query.deletedCount == 0) {
+      return res.status(400).json({ error: "Invalid email to unsubscribe" });
+    }
     myCache.del(email);
-    res.json({ data: sub, status: "success" });
+    res.json({ status: "success" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err.message });

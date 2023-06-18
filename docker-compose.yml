@@ -1,9 +1,19 @@
 services:
+  # client:
+  #   build: ./client
+  #   environment:
+  #     WAIT_HOSTS: web:8080
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./client:/app
+  #   restart: always
   rabbitmq:
     image: rabbitmq:3.12-management
     ports:
       - 5673:5672
       - 15673:15672
+    restart: always
   web:
     build: ./server
     environment:
@@ -13,6 +23,7 @@ services:
       - ./server:/app
     ports:
       - 8080:8080
+    restart: always
   ml:
     build: ./ml
     environment:
@@ -22,6 +33,7 @@ services:
       - ./ml/.env
     volumes:
       - ./ml:/app
+    restart: always
   mail:
     build: ./mail
     environment:
@@ -31,6 +43,7 @@ services:
       - ./mail/.env
     volumes:
       - ./mail:/app
+    restart: always
   mongodb:
     image: mongo
     ports:
@@ -42,5 +55,6 @@ services:
     volumes:
       - data:/data/db
       - ./scripts:/docker-entrypoint-initdb.d
+    restart: always
 volumes:
   data:

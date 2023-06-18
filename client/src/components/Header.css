@@ -3,6 +3,8 @@
     flex-direction: column;
     align-items: normal;
     justify-content: normal;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(25px + 2vmin);
+    font-weight: bold;
+    font-family: serif;
     color: white;
   }
