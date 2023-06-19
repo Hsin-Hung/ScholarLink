@@ -1,11 +1,13 @@
-import "./Header.css";
-import React from 'react';
+import React from "react";
+import { Typography, Box } from "@mui/material";
 
 function Header() {
   return (
-    <header className="Header">
-      <p>Scholar Link</p>
-    </header>
+    <Box m={2} pt={5}>
+      <Typography variant="h1" gutterBottom align="center">
+        Scholar Link
+      </Typography>
+    </Box>
   );
 }
 
