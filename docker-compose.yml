@@ -1,13 +1,4 @@
 services:
-  # client:
-  #   build: ./client
-  #   environment:
-  #     WAIT_HOSTS: web:8080
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./client:/app
-  #   restart: always
   rabbitmq:
     image: rabbitmq:3.12-management
     ports:

@@ -27,9 +27,10 @@ const rmqConnectPromise = connectRMQ();
 app.use(cors());
 app.use(limiter);
 app.use(express.json());
+app.use(express.static("client/build"));
 
 app.get("/", (req, res) => {
-  res.send("Display Website");
+  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
 
 app.post("/subscribe", createSub);
