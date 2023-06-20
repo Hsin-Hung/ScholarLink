@@ -62,7 +62,9 @@ let task;
 
 Promise.all([dbConnectPromise, rmqConnectPromise])
   .then(() => {
-    task = cron.schedule("*/30 * * * * *", sendEmails);
+    const schedule = process.env.CRON_SCHEDULE;
+    console.log("cron schedule: " + schedule);
+    task = cron.schedule(schedule, sendEmails);
     task.start();
   })
   .catch((err) => {

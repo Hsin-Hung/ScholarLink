@@ -6,30 +6,31 @@ services:
       - 15673:15672
     restart: always
   web:
-    build: ./server
+    build: ./web
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
       CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
     volumes:
-      - ./server:/app
+      - ./web:/app
     ports:
       - 8080:8080
     restart: always
-  ml:
-    build: ./ml
+  recommender:
+    build: ./recommender
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
       CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
     env_file:
-      - ./ml/.env
+      - ./recommender/.env
     volumes:
-      - ./ml:/app
+      - ./recommender:/app
     restart: always
   mail:
     build: ./mail
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
       CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
+      CRON_SCHEDULE: "*/30 * * * * *"
     env_file:
       - ./mail/.env
     volumes:
