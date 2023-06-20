@@ -5,7 +5,7 @@ function Header() {
   return (
     <Box m={2} pt={5}>
       <Typography variant="h1" gutterBottom align="center">
-        Scholar Link
+        ScholarLink
       </Typography>
     </Box>
   );
