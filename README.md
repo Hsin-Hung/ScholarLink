@@ -74,11 +74,11 @@ ScholarLink is a web application that provides personalized weekly research pape
    ```
 2. Set up the environment variables by creating an `.env` file in each of the following directories with the specified keys:
    * recommender
-        ```sh
+        ```
             API_KEY=<your Springer API key>
         ```
    * mail
-        ```sh
+        ```
             MAIL_USERNAME=<your email username>
             MAIL_PASSWORD=<your email password>
             OAUTH_CLIENTID=<your oauth cliend id>
