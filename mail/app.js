@@ -28,7 +28,7 @@ const sendEmail = async (email, recommendation) => {
   try {
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: "Scholar Link <scholarlinkmail@gmail.com>", // sender address
+      from: `ScholarLink <${process.env.MAIL_USERNAME}>`, // sender address
       to: email, // receiver
       subject: "Your Weekly Research Paper", // Subject line
       html: getEmailTemplate(recommendation), // html body
