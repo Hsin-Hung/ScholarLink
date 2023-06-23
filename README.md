@@ -62,8 +62,8 @@ ScholarLink is a web application that provides personalized weekly research pape
 ## Getting Started
 ### Prerequisites
 
-1. Get a free API Key at [https://dev.springernature.com/](https://dev.springernature.com/)
-2. Follow the [instructions](https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/) to get the credentials for SMTP transporter with Nodemailer
+1. Get a free API Key at [https://dev.springernature.com/](https://dev.springernature.com/) for **Instruction section 2.recommender**
+2. Follow the [instructions](https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/#:~:text=To%20create%20a%20transporter%20object%2C%20we%20do%20the%20following%3A) to get the credentials for SMTP transporter with Nodemailer for **Instruction section 2.mail**
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
