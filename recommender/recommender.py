@@ -24,14 +24,17 @@ class Recommender:
             self.updateInterestsTotal()
             print(self.interestToTotal)
 
+    # update the date range of the recommendations we will be fetching
     def updateRecommendationFromYear(self):
         self.fromYear = datetime.date.today().year - constant.RECOMMENDATION_AGE
 
+    # update given subscriber's recommendation
     def updateUser(self, user):
         email, interests = user["email"], user["interests"]
         recommendation = self.recommend(interests)
         self.db.updateRecommendation(email, recommendation)
 
+    # update recommendations for all existing subscribers
     def updateAllRecommendations(self):
         print("Update all recommendations ...")
         # get the email and interests from all subscribers
@@ -40,6 +43,7 @@ class Recommender:
                 self.updateUser(user)
             print("Done updating recommendations")
 
+    # update the total paper counts for the given interest through Springer
     def updateInterestTotal(self, interest):
 
         url = self.endpoint + "q=subject:%22" + interest + "%22 onlinedatefrom:" + str(self.fromYear) + "-01-01&p=0&api_key=" + self.api_key
@@ -53,6 +57,7 @@ class Recommender:
         except Exception as e:
             print('An error occurred: %r' % str(e))
 
+    # update the total papers count for all interest options
     def updateInterestsTotal(self):
         print("updating interests total ...")
         self.updateRecommendationFromYear()
@@ -75,12 +80,15 @@ class Recommender:
         delta = toDate - fromDate
         return delta.days
 
+    # process work queue tasks
     def process(self, task, message_id):
 
+        # reset recommendations for all existing subscribers
         if message_id == "resetRecommendations":
             thread1 = threading.Thread(target=self.updateAllRecommendations)
             thread1.start()
             return True
+        # update the recommendation for the new subscriber
         elif message_id == "newSubscriber":
             email = task
             if res := self.db.getInterests(email):
@@ -94,6 +102,7 @@ class Recommender:
         print("Fail updating interests for %r" % task)
         return False
     
+    # recommend a paper based on given interests
     def recommend(self, interests):
         interest = self.getRandomInterest(interests)
         # check whether we need to update the interests total to reflect the new totals
@@ -110,6 +119,6 @@ class Recommender:
         except Exception as e:
             print('An error occurred:', str(e))
         
-        # return the home page if fail to recommend
+        # recommend the Springer home page if failed to recommend
         return "https://www.springer.com/us"
     

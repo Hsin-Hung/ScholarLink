@@ -7,6 +7,8 @@ def main():
 
    with DB(os.environ['CONN_STR']) as db:
       rec = Recommender(db)
+
+      # calls when receives a new task to process
       def callback(ch, method, properties, body):
                print(" [x] Received %r" % body.decode())
                print(" [x] Received properties %r" % properties.message_id)

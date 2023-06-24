@@ -24,6 +24,7 @@ exports.getOptions = async () => {
 
 let channel, connection;
 
+// connect to work queue
 exports.connectQueue = async () => {
   try {
     connection = await amqp.connect("amqp://rabbitmq");
@@ -44,6 +45,7 @@ exports.connectQueue = async () => {
   }
 };
 
+// close to work queue
 exports.closeQueue = async () => {
   if (channel) {
     await channel.close();
@@ -54,6 +56,7 @@ exports.closeQueue = async () => {
   console.log("RabbitMQ disconnected through app termination");
 };
 
+// send new task to work queue for the recommender to process
 exports.sendData = async (email) => {
   await channel.sendToQueue("task_queue", Buffer.from(email), {
     persistent: true,

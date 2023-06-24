@@ -67,6 +67,7 @@ Promise.all([dbConnectPromise, rmqConnectPromise])
     let valid = cron.validate(schedule);
     if (valid) {
       console.log(`cron schedule: ${schedule} with timezone: ${timezone}`);
+      // schedules weekly cron job to send emails
       task = cron.schedule(schedule, sendEmails, {
         scheduled: true,
         timezone: timezone,

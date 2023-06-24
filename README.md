@@ -22,6 +22,7 @@
         <li><a href="#instruction">Instruction</a></li>
       </ul>
     </li>
+    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -96,6 +97,12 @@ ScholarLink is a web application that provides personalized weekly research pape
    ```sh
    docker compose up
    ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contributing
+
+Contributions to this project are welcome. If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

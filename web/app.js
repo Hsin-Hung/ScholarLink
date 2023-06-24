@@ -29,16 +29,21 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.static("client/build"));
 
+// get the client react page
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
 
+// users subscribe with their emails and interests
 app.post("/subscribe", createSub);
 
+// users unsubscribe with their emails
 app.post("/unsubscribe", deleteSub);
 
+// users fetch their previous interests
 app.post("/fetch", getSubInterests);
 
+// get the interest options for client react page
 app.get("/options", getOptions);
 
 let server;

@@ -15,6 +15,7 @@ exports.getAllRecommendations = async () => {
   }
 };
 
+// send reset recommendations task to work queue for the recommender to process
 exports.resetRecommendations = async () => {
   try {
     await channel.sendToQueue("task_queue", Buffer.from(""), {
@@ -28,6 +29,7 @@ exports.resetRecommendations = async () => {
 
 let channel, connection;
 
+// connect to work queue
 exports.connectRMQ = async () => {
   try {
     connection = await amqp.connect("amqp://rabbitmq");
@@ -49,6 +51,7 @@ exports.connectRMQ = async () => {
   }
 };
 
+// close work queue
 exports.closeRMQ = async () => {
   if (channel) {
     await channel.close();
