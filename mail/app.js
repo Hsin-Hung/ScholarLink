@@ -50,7 +50,7 @@ const sendEmails = async () => {
       if (recommendation) {
         await sendEmail(email, recommendation);
       } else {
-        console.log(email + " has no recommendation to send");
+        console.log(`${email} has no recommendation to send`);
       }
     }
     // reset the recommendations for all subscribers for next send
@@ -63,9 +63,18 @@ let task;
 Promise.all([dbConnectPromise, rmqConnectPromise])
   .then(() => {
     const schedule = process.env.CRON_SCHEDULE;
-    console.log("cron schedule: " + schedule);
-    task = cron.schedule(schedule, sendEmails);
-    task.start();
+    const timezone = process.env.CRON_TIMEZONE;
+    let valid = cron.validate(schedule);
+    if (valid) {
+      console.log(`cron schedule: ${schedule} with timezone: ${timezone}`);
+      task = cron.schedule(schedule, sendEmails, {
+        scheduled: true,
+        timezone: timezone,
+      });
+      task.start();
+    } else {
+      console.log(`Invalid cron schedule: ${schedule}`);
+    }
   })
   .catch((err) => {
     console.log(err);

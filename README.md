@@ -88,7 +88,8 @@ ScholarLink is a web application that provides personalized weekly research pape
 3. Configurations (Optional): 
    * [node-cron](https://www.npmjs.com/package/node-cron) (docker-compose)
     ```js
-        CRON_SCHEDULE: "*/30 * * * * *" // default sends mail every 30 secs
+        // Set to "*/30 * * * * *" to schedule mail every 30 secs for testing
+        CRON_SCHEDULE: "0 17 * * 5" // Default schedules weekly mail every 17:00 Fri
     ```
 
 4. Run and access the web app through port 8080

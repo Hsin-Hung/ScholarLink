@@ -26,7 +26,8 @@ services:
     environment:
       WAIT_HOSTS: mongodb:27017, rabbitmq:5672
       CONN_STR: mongodb://scholarlink:scholarlink@mongodb/mydb
-      CRON_SCHEDULE: "*/30 * * * * *"
+      CRON_SCHEDULE: "0 17 * * 5"  # Default schedules weekly mail every 17:00 Fri.
+      CRON_TIMEZONE: America/New_York # Default NY time. Follow https://www.iana.org/time-zones to set to a different timezone
     env_file:
       - ./mail/.env
     restart: always
