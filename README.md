@@ -116,6 +116,6 @@ Distributed under Apache-2.0 license. See `LICENSE` for more information.
 
 Henry - hsinhungw@gmail.com
 
-Hackathon Link: [HackSharks](https://hacksharks.devpost.com/)
+Hackathon Finalists: [HackSharks](https://hacksharks.devpost.com/updates/27474-winners-announcement-final-round)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
