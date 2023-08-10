@@ -50,7 +50,14 @@ const getOptionsCache = async () => {
 };
 
 const validateSubData = async (email, interests) => {
-  const val = await validate(email);
+  const val = await validate({
+    email: email,
+    validateRegex: true,
+    validateMx: true,
+    validateTypo: true,
+    validateDisposable: true,
+    validateSMTP: false,
+  });
   // email is not valid or interests are empty
   if (!val["valid"] || interests.length == 0) {
     return false;
