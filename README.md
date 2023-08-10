@@ -55,7 +55,7 @@ ScholarLink is a web application that provides personalized weekly research pape
 ### System Design
 
 <p align="center"> 
-    <img src="images/sys_diagram.png"  width="500" height="250">
+    <img src="images/sys_diagram.png"  width="550" height="310">
 </p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
